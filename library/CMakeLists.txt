@@ -9,12 +9,20 @@ project(library
    LANGUAGES CXX
 )
 
-# Add these files to this binary
-file(GLOB IncludeHeaderFiles include/*.h)
-file(GLOB InternalHeaderFiles src/*.h)
-file(GLOB SourceFiles src/*.cpp)
+find_package(Qt5 COMPONENTS Widgets)
 
-set(SOURCES ${IncludeHeaderFiles} ${InternalHeaderFiles} ${SourceFiles})
+# Turn on automatic invocation of the MOC, UIC & RCC
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
+
+set(SOURCES
+   # externally visible
+   src/implementation.cpp ./include/library/header.h
+   # internally visible
+   ./src/internal.cpp ./src/internal.h
+   # QT dialogs
+   ./src/dialog.cpp ./src/dialog.h ./src/dialog.ui)
 
 # The result
 add_library(library ${SOURCES})
@@ -40,3 +48,4 @@ else()
       CONAN_PKG::qt # defined in root CMakeLists.txt
    )
 endif()
+
